@@ -13,6 +13,16 @@ static const char *TAG = "NEOPIXEL";
 #define RGB_LED_GPIO 16
 #define BUTTON_GPIO GPIO_NUM_6
 
+#define LONG_PRESS_MS 1500
+#define DEBOUNCE_MS 20
+
+#define BUTTON_PRESSED 0x01
+#define BUTTON_RELEASED 0x02
+
+TaskHandle_t mainTaskHandle = nullptr;
+TaskHandle_t ledTaskHandle = nullptr;
+volatile TickType_t lastEdge = 0;
+
 struct DCCMember {
     const char* name;
     uint32_t color;
@@ -20,52 +30,34 @@ struct DCCMember {
 
 DCCMember MemberList[] = 
 {
-    {"Kitsune", 0xd65aa0},
-    {"Rina", 0xFFFFFF},
-    {"Yuzu", 0x52099c},
+    {"Kitsune", 0xFF249D},
+    {"Rina", 0xDB0076},
+    {"Yuzu", 0x8700FF},
     {"Lullia", 0x1643c9},
     {"Nana", 0x000073}
 };
 
 const size_t MEMBER_COUNT = sizeof(MemberList) / sizeof(MemberList[0]);
 
-#define LONG_PRESS_MS 1000
-#define DEBOUNCE_MS 30
-
-enum class ButtonEvent {
-    None,
-    ShortPress,
-    LongPress
-};
-
-volatile ButtonEvent buttonEvent = ButtonEvent::None;
-volatile TickType_t pressStart = 0;
-volatile TickType_t lastEdge = 0;
 static void IRAM_ATTR button_isr_handler(void* arg) {
-    int level = gpio_get_level(BUTTON_GPIO);
     TickType_t now = xTaskGetTickCountFromISR();
-
-    if ((now - lastEdge) < pdMS_TO_TICKS(DEBOUNCE_MS)) {
+    if((now - lastEdge) < pdMS_TO_TICKS(DEBOUNCE_MS)) { //Debounce
         return;
     }
     lastEdge = now;
+    uint8_t level = gpio_get_level(BUTTON_GPIO); // 0 == press, 1 == release
+    BaseType_t higherPriorityTaskWoken = pdFALSE;
 
     if(level == 0) {
-        pressStart = now;
+        xTaskNotifyFromISR(mainTaskHandle, BUTTON_PRESSED, eSetValueWithOverwrite, &higherPriorityTaskWoken);
     }
     else {
-        if(pressStart != 0) {
-            TickType_t pressDuration = now - pressStart;
-            if (pressDuration >= pdMS_TO_TICKS(LONG_PRESS_MS)) {
-                buttonEvent = ButtonEvent::LongPress;
-            }
-            else {
-                buttonEvent = ButtonEvent::ShortPress;
-            }
-            pressStart = 0;
-        }
+        xTaskNotifyFromISR(mainTaskHandle, BUTTON_RELEASED, eSetValueWithOverwrite, &higherPriorityTaskWoken);
     }
-    
+    if(higherPriorityTaskWoken) {
+        portYIELD_FROM_ISR();
+    }
+
 }
 
 
@@ -87,8 +79,10 @@ void set_color(led_strip_handle_t led_strip, uint32_t color)
 
 extern "C" void app_main(void)
 {
+     mainTaskHandle = xTaskGetCurrentTaskHandle();
+
+    // LED Config
     led_strip_handle_t led_strip = nullptr;
-    // Configure the onboard WS2812 RGB LED
     led_strip_config_t strip_config = {
         .strip_gpio_num = RGB_LED_GPIO,
         .max_leds = 7,
@@ -98,7 +92,6 @@ extern "C" void app_main(void)
             .invert_out = false
         }
     };
-    // Configure the RMT peripheral
     led_strip_rmt_config_t rmt_config = {
         .clk_src = RMT_CLK_SRC_DEFAULT,
         .resolution_hz = 10 * 1000 * 1000,
@@ -115,6 +108,8 @@ extern "C" void app_main(void)
         )
     );
     
+    led_strip_clear(led_strip);
+
     // Button setup
     gpio_reset_pin(BUTTON_GPIO);
     gpio_set_direction(BUTTON_GPIO, GPIO_MODE_INPUT);
@@ -128,41 +123,44 @@ extern "C" void app_main(void)
     uint32_t memberInd = 0;
 
     while (true) {
-        ButtonEvent event = buttonEvent;
-        buttonEvent = ButtonEvent::None;
+        uint32_t notification = 0;
+        xTaskNotifyWait(0, UINT32_MAX, &notification, portMAX_DELAY);
 
-        switch(event) {
-            case ButtonEvent::None:
-                break;
-            case ButtonEvent::ShortPress:
-                if(systemOn){
-                    memberInd++;
-                    if(memberInd >= MEMBER_COUNT) {
-                        memberInd = 0;
-                    }
+        if(notification == BUTTON_PRESSED){
+            //wait for 1 second for 'long press' or detect button release before 1 second
+            uint32_t releaseNotif = 0;
+            BaseType_t result = xTaskNotifyWait(0, UINT32_MAX, &releaseNotif, pdMS_TO_TICKS(LONG_PRESS_MS));
+
+            if(releaseNotif == BUTTON_RELEASED && result == pdTRUE) { //button released before long press timer
+                if(systemOn) {
+                    memberInd = (memberInd + 1) % MEMBER_COUNT;
                     set_color(led_strip, MemberList[memberInd].color);
                     ESP_LOGI(TAG, "Member: %s", MemberList[memberInd].name);
+
                 }
-                break;
-            case ButtonEvent::LongPress:
+            }
+            else if(result == pdFALSE) { // long press system toggle
                 systemOn = !systemOn;
-                if(systemOn){
+                if(systemOn) {
                     ESP_LOGI(TAG, "System on");
-                    memberInd++;
-                    if(memberInd >= MEMBER_COUNT) {
-                        memberInd = 0;
-                    }
-                    set_color(led_strip, MemberList[memberInd].color);
-                    ESP_LOGI(TAG, "Member: %s", MemberList[memberInd].name);
+                    set_color(led_strip, MemberList[0].color);
+                    memberInd = 0;
                 }
                 else {
                     ESP_LOGI(TAG, "System off");
                     led_strip_clear(led_strip);
                 }
-
-                break;
+                // wait for user to release button
+                while(true){
+                    uint32_t releaseNotif = 0;
+                    xTaskNotifyWait(0, UINT32_MAX, &releaseNotif, portMAX_DELAY);
+                    if(releaseNotif == BUTTON_RELEASED) {
+                        break;
+                    }
+                }
+            }
         }
 
-        vTaskDelay(pdMS_TO_TICKS(10));
+
     }
 }

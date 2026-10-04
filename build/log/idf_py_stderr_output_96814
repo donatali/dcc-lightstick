@@ -1,0 +1,55 @@
+Command: /Users/natalie/.espressif/tools/python/v6.1/venv/bin/python /Users/natalie/.espressif/v6.1/esp-idf/tools/idf_monitor.py -p /dev/cu.usbmodem1101 -b 115200 --toolchain-prefix xtensa-esp32s3-elf- --target esp32s3 --revision 0 /Users/natalie/Documents/dcc-lightstick/build/dcc-lightstick.elf /Users/natalie/Documents/dcc-lightstick/build/bootloader/bootloader.elf -m '/Users/natalie/.espressif/tools/python/v6.1/venv/bin/python' '/Users/natalie/.espressif/v6.1/esp-idf/tools/idf.py'
+--- esp-idf-monitor 1.10.0 on /dev/cu.usbmodem1101 115200
+--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H
+--- 0x42009dae: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:142
+--- 0x403c8700: _stext at ??:?
+--- 0x403c8904: call_start_cpu0 at /Users/natalie/.espressif/v6.1/esp-idf/components/bootloader/subproject/main/bootloader_start.c:27
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009db3: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:144
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009dab: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:141
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+--- 0x4200e21e: task_wdt_timeout_handling at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:436
+--- 0x4200e630: task_wdt_isr at /Users/natalie/.espressif/v6.1/esp-idf/components/esp_system/task_wdt/task_wdt.c:509
+--- 0x40377325: _xt_lowint1 at /Users/natalie/.espressif/v6.1/esp-idf/components/xtensa/xtensa_vectors.S:1264
+--- 0x42009da1: app_main at /Users/natalie/Documents/dcc-lightstick/main/dcc-lightstick.cpp:138
+--- 0x420074d7: main_task at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/app_startup.c:206
+--- 0x42014d1a: vPortTaskWrapper at /Users/natalie/.espressif/v6.1/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/port.c:147
+
